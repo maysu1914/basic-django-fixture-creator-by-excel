@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 
 import inflection
@@ -32,20 +33,28 @@ def create_file(output_name, data):
         file.write(data)
 
 
+def get_file_fullname(name):
+    for file in os.listdir('.'):
+        if os.path.isfile(file) and name in file:
+            return file
+    return name
+
+
 def get_inputs():
     # https://stackoverflow.com/a/17328907/14506165
     app_input = inflection.underscore(input("Enter the app name of the model: "))
     model_input = inflection.underscore(input("Enter the name of the model: "))
-    return app_input, model_input
+    excel_input = get_file_fullname(input("Enter the excel file name: "))
+    return app_input, model_input, excel_input
 
 
 def main():
-    app_name, model_name = get_inputs()
+    app_name, model_name, excel_filename = get_inputs()
     # send columns parameter if you want to filter data by columns
     # example "A,B,C,F"
-    df_dict = read_excel('example_data.xlsx')
+    df_dict = read_excel(excel_filename)
     fixture_json = create_django_fixture(df_dict, app_name, model_name)
-    create_file('fixtures/my_model.json', json.dumps(fixture_json, ensure_ascii=False))
+    create_file(f'fixtures/{model_name}.json', json.dumps(fixture_json, ensure_ascii=False))
 
 
 if __name__ == '__main__':
