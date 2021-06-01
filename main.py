@@ -34,6 +34,7 @@ def create_file(output_name, data):
 
 
 def get_file_fullname(name):
+    # https://stackoverflow.com/a/11969014/14506165
     for file in os.listdir('.'):
         if os.path.isfile(file) and name in file:
             return file
