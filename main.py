@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import pathlib
 
@@ -21,7 +22,8 @@ def create_django_fixture(df_dict, app, model):
             "fields": {}
         }
         for key, value in df_dict.items():
-            record["fields"][key] = value[index - 1] if value[index - 1] else None
+            # https://www.codespeedy.com/check-if-a-given-string-is-nan-in-python/
+            record["fields"][key] = value[index - 1] if value[index - 1] == value[index - 1] else None
         results.append(record)
     return results
 
